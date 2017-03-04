@@ -3,6 +3,7 @@ var express = require('express')
 var pythonShell = require('python-shell')
 var events = require('events');
 var eventEmitter = new events.EventEmitter();
+//var cors = require('cors');
 
 const config = require ('./config.js')
 const utils = require ('./utils.js')
@@ -19,6 +20,12 @@ var dataFiles = {
 
 // TODO just for development
 app.set('json spaces', 10);
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 // -- middleware - authorisation? ----------------------------------------------
 router.use(function(req,res,next) {
@@ -97,6 +104,7 @@ app.use("/api",router);
 app.use("*",function(req,res){
   res.status(404).send("Ops, wrong request!");
 });
+
 
 app.listen(5199, function(){
   console.log('forecast server is waiting on port 5199')
